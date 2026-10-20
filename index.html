@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111318">
+  <title>TaskFlow — Organize seu dia</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="TaskFlow início">
+        <span class="brand-mark" aria-hidden="true">✓</span>
+        <span>Task<span class="brand-accent">Flow</span></span>
+      </a>
+      <span class="topbar-label">SEU ESPAÇO DE PRODUTIVIDADE</span>
+    </header>
+
+    <main class="main-content">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow"><span class="status-dot"></span> UM PASSO DE CADA VEZ</p>
+        <h1 id="page-title">Tire as ideias<br>da cabeça<span class="title-period">.</span></h1>
+        <p class="intro-copy">Organize suas tarefas e acompanhe o seu progresso.</p>
+      </section>
+
+      <section class="task-panel" aria-labelledby="tasks-title">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">MINHA ROTINA</p>
+            <h2 id="tasks-title">Minhas tarefas</h2>
+          </div>
+          <span class="task-count" aria-live="polite">
+            {{ tasks.length }} {{ tasks.length === 1 ? 'tarefa' : 'tarefas' }}
+          </span>
+        </div>
+
+        <form class="add-form" @submit.prevent="addTask">
+          <label class="sr-only" for="new-task">Nome da tarefa</label>
+          <input
+            id="new-task"
+            v-model="newTask"
+            type="text"
+            placeholder="O que você precisa fazer?"
+            autocomplete="off"
+          >
+          <button class="add-button" type="submit">
+            <span aria-hidden="true">+</span>
+            <span>Adicionar</span>
+          </button>
+        </form>
+
+        <div v-if="tasks.length === 0" class="empty-state">
+          <div class="empty-icon" aria-hidden="true">✦</div>
+          <p class="empty-title">Tudo começa por aqui</p>
+          <p class="empty-copy">Adicione uma tarefa para dar o primeiro passo.</p>
+        </div>
+
+        <ul v-else class="task-list">
+          <li v-for="task in tasks" :key="task.id" class="task-item" :class="{ completed: task.completed }">
+            <button
+              class="check-button"
+              type="button"
+              :aria-label="task.completed ? 'Marcar como pendente' : 'Marcar como concluída'"
+              :aria-pressed="task.completed"
+              @click="toggleTask(task.id)"
+            >
+              <span v-if="task.completed" aria-hidden="true">✓</span>
+            </button>
+            <span class="task-name">{{ task.name }}</span>
+            <button
+              class="delete-button"
+              type="button"
+              :aria-label="'Excluir tarefa ' + task.name"
+              @click="deleteTask(task.id)"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </li>
+        </ul>
+
+        <p v-if="tasks.length > 0" class="panel-footer">
+          <span class="footer-sparkle" aria-hidden="true">✦</span>
+          Pequenos passos também são progresso.
+        </p>
+      </section>
+
+      <footer class="page-footer">
+        Feito para manter o foco <span aria-hidden="true">·</span> Uma tarefa por vez
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
